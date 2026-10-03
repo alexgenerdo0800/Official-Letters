@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unsent Letters — Only for Us</title>
+    <style>
+        :root {
+            --bg-pink: #fdf5f6;
+            --card-pink: #fff0f2;
+            --forest-green: #1b3b2b;
+            --accent-green: #2d5a43;
+            --text-dark: #1b3b2b;
+            --muted-green: #597d6a;
+        }
+        body {
+            font-family: 'Courier New', Courier, monospace, -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-pink);
+            color: var(--text-dark);
+            padding: 40px 20px;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            background-image: radial-gradient(rgba(27, 59, 43, 0.03) 1px, transparent 0);
+            background-size: 24px 24px;
+        }
+        .container {
+            max-width: 550px;
+            width: 100%;
+            background: var(--card-pink);
+            padding: 35px;
+            border-radius: 20px;
+            border: 2px solid var(--forest-green);
+            box-shadow: 0 10px 30px rgba(27, 59, 43, 0.06);
+            position: relative;
+            overflow: hidden;
+        }
+        .lily-decor-top {
+            position: absolute;
+            top: -10px;
+            right: 15px;
+            font-size: 50px;
+            color: var(--forest-green);
+            opacity: 0.15;
+            user-select: none;
+        }
+        .lily-decor-bottom {
+            position: absolute;
+            bottom: -10px;
+            left: 15px;
+            font-size: 50px;
+            color: var(--forest-green);
+            opacity: 0.15;
+            user-select: none;
+            transform: scaleX(-1);
+        }
+        h1 {
+            font-size: 26px;
+            margin-bottom: 5px;
+            color: var(--forest-green);
+            text-align: center;
+            font-weight: bold;
+            letter-spacing: -1px;
+        }
+        p.subtitle {
+            text-align: center;
+            color: var(--muted-green);
+            font-size: 13px;
+            margin-top: 0;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid var(--forest-green);
+            margin-bottom: 25px;
+        }
+        .tab {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            color: var(--muted-green);
+            border: 2px solid transparent;
+            border-bottom: none;
+            border-radius: 8px 8px 0 0;
+            transition: all 0.2s;
+        }
+        .tab.active {
+            color: var(--forest-green);
+            background-color: var(--card-pink);
+            border-color: var(--forest-green) var(--forest-green) var(--card-pink) var(--forest-green);
+            margin-bottom: -2px;
+        }
+        .panel {
+            display: none;
+        }
+        .panel.active {
+            display: block;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        input[type="email"], textarea {
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 20px;
+            border: 1px solid var(--forest-green);
+            border-radius: 8px;
+            font-size: 14px;
+            box-sizing: border-box;
+            background-color: #fffafb;
+            color: var(--text-dark);
+            font-family: inherit;
+        }
+        textarea {
+            height: 180px;
+            resize: vertical;
+            line-height: 1.6;
+        }
+        button {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid var(--forest-green);
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            background-color: var(--forest-green);
+            color: #fff0f2;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+        button:hover {
+            background-color: var(--accent-green);
+        }
+        .notification-box {
+            margin-top: 20px;
+            padding: 15px;
+            background: #fffafb;
+            border: 1px dashed var(--forest-green);
+            border-radius: 8px;
+            text-align: center;
+            display: none;
+        }
+        .mail-link {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: transparent;
+            color: var(--forest-green);
+            border: 1px solid var(--forest-green);
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 13px;
+        }
+        .mail-link:hover {
+            background-color: var(--forest-green);
+            color: var(--card-pink);
+        }
+        .cipher-output {
+            background: #fbf0f2;
+            border: 1px solid var(--muted-green);
+            padding: 12px;
+            border-radius: 6px;
+            word-break: break-all;
+            font-size: 12px;
+            margin-bottom: 12px;
+            max-height: 80px;
+            overflow-y: auto;
+            text-align: left;
+        }
+        .error {
+            color: #bd3a42;
+            font-weight: bold;
+            font-size: 13px;
+            margin-top: 5px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="lily-decor-top">⚜</div>
+    <div class="lily-decor-bottom">⚜</div>
+
+    <h1>Unsent Letters</h1>
+    <p class="subtitle">scrambled by a code only we share.</p>
+
+    <div class="tabs">
+        <div id="tab-write" class="tab active" onclick="switchTab('write')">Write Letter</div>
+        <div id="tab-read" class="tab" onclick="switchTab('read')">Read Received</div>
+    </div>
+
+    <!-- WRITE PANEL -->
+    <div id="panel-write" class="panel active">
+        <label for="lover-email">Lover's Email Address:</label>
+        <input type="email" id="lover-email" placeholder="their.email@example.com">
+
+        <label for="letter-content">Your Secret Letter:</label>
+        <textarea id="letter-content" placeholder="Type what you want to tell them..."></textarea>
+
+        <button onclick="encryptAndPrepare()">Seal & Submit Letter</button>
+
+        <div id="write-notify" class="notification-box">
+            <div style="color:var(--accent-green); font-weight:bold; margin-bottom:15px;">✨ Letter Sealed Safely!</div>
+            <p style="margin:0 0 12px 0; font-size:13px;">Your letter has been cleared and locked behind your PIN. Click below to alert your lover via email:</p>
+            <div id="cipher-preview" class="cipher-output"></div>
+            <a href="#" id="email-trigger-link" class="mail-link">✉ Send Notification Email</a>
+        </div>
+    </div>
+
+    <!-- READ PANEL -->
+    <div id="panel-read" class="panel">
+        <label for="scrambled-payload">Paste Scrambled Text From Email:</label>
+        <textarea id="scrambled-payload" placeholder="Paste the blocks of random letters you received here..."></textarea>
+
+        <button onclick="decryptIncoming()">Unseal & Read Letter</button>
+
+        <div id="read-output" class="notification-box" style="margin-top:20px; text-align:left;">
+            <label style="font-size:11px;">Decrypted Letter:</label>
+            <div id="decrypted-text" style="white-space: pre-wrap; line-height:1.6; font-size:14px; margin-top:5px;"></div>
+        </div>
+        <div id="read-error" class="error" style="margin-top:15px;"></div>
+    </div>
+</div>
+
+<script>
+    const HIDDEN_PIN = "03250904";
+
+    function switchTab(tabName) {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+        
+        if(tabName === 'write') {
+            document.getElementById('tab-write').classList.add('active');
+            document.getElementById('panel-write').classList.add('active');
+        } else {
+            document.getElementById('tab-read').classList.add('active');
+            document.getElementById('panel-read').classList.add('active');
+            document.getElementById('read-output').style.display = 'none';
+            document.getElementById('read-error').innerText = '';
+        }
+    }
+
+    async function deriveKey(salt) {
+        const enc = new TextEncoder();
+        const baseKey = await window.crypto.subtle.importKey(
+            "raw", 
+            enc.encode(HIDDEN_PIN), 
+            { name: "PBKDF2" }, 
+            false, 
+            ["deriveKey"]
+        );
+        return window.crypto.subtle.deriveKey(
+            {
+                name: "PBKDF2",
+                salt: salt,
+                iterations: 100000,
+                hash: "SHA-256"
+            },
+            baseKey,
+            { name: "AES-GCM", length: 256 },
+            false,
+            ["encrypt", "decrypt"]
+        );
+    }
+
+    async function encryptAndPrepare() {
+        const email = document.getElementById('lover-email').value;
+        const plainText = document.getElementById('letter-content').value;
+        const notifyBox = document.getElementById('write-notify');
+        
+        if (!email) {
+            alert("Please input your lover's email address to send the notification.");
+            return;
+        }
+        if (!plainText) {
+            alert("Your letter is empty.");
+            return;
+        }
+
+        try {
+            const encoder = new TextEncoder();
+            const salt = window.crypto.getRandomValues(new Uint8Array(16));
+            const iv = window.crypto.getRandomValues(new Uint8Array(12));
+            const key = await deriveKey(salt);
+
